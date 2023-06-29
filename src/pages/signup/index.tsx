@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { signup } from '../../apis/auth';
 
 const Signup = () => {
   // const navigate = useNavigate();
@@ -29,13 +30,14 @@ const Signup = () => {
   }, [passEmail, passPassword]);
 
   const postSignUp = () => {
-    // signup(email, password).then(async (res ) => {
-    //     if (res.status === 201) {
-    //       return navigate("/signin");
-    //     } else {
-    //       alert(res.data.message);
-    //     }
-    //   });
+    signup(email, password).then(async res => {
+      if (res.status === 201) {
+        alert('회원가입 성공');
+        // return navigate('/signin');
+      } else {
+        alert('회원가입 실패');
+      }
+    });
   };
 
   const onCheckEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
