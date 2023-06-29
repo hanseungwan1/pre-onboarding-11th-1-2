@@ -1,3 +1,6 @@
+import React from 'react';
+import useAuthRedirection from '../../hooks/useAuthRedirection';
+import Path from '../../utils/constants/path';
 import React, { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 import {
@@ -20,6 +23,15 @@ const Signup = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [passEmail, setPassEmail] = useState<boolean>(false);
   const [passPassword, setPassPassword] = useState<boolean>(false);
+  
+    const isAuth = useAuthRedirection({
+    to: Path.TODO,
+    isRedirectionIfAuth: true,
+  });
+
+  if (isAuth) {
+    return <></>;
+  }
 
   useEffect(() => {
     if (passEmail && passPassword) {
