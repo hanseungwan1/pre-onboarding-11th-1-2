@@ -1,7 +1,9 @@
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import useAuthRedirection from '../../hooks/useAuthRedirection';
 import Path from '../../utils/constants/path';
-import React, { useState } from 'react';
-import { useRouter } from '../../hooks/useRouter';
+import { checkSignin } from './signin.hook';
+import { checkEmail, checkPassword } from './signin.hook';
+// import { useNavigate } from 'react-router-dom';
 import {
   Alert,
   AlertDescription,
@@ -13,47 +15,37 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { signup } from '../../apis/auth';
-import { checkEmail, checkPassword } from '../../utils/helper/validationCheck';
 
-const Signup = () => {
+const Signin = () => {
+  // const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-  const { replaceTo } = useRouter();
-
   const isAuth = useAuthRedirection({
     to: Path.TODO,
     isRedirectionIfAuth: true,
   });
-
-  if (isAuth) {
-    return <></>;
-  }
-
-  const postSignUp = () => {
-    signup(email, password).then(res => {
-      if (res.status === 201) {
-        alert('회원가입 성공');
-        replaceTo(Path.SIGNIN);
-      } else {
-        alert('회원가입 실패');
-      }
-    });
+  const EmailHanlder = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   };
-
+  const PasswordHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+  const loginHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    checkSignin(email, password);
+  };
   return (
     <Center h="90vh">
       <Box
         w="30vw"
-        h="35vh"
+        h="50vh"
         borderWidth="1px"
         borderRadius="lg"
         position="relative"
         padding="20px"
       >
         <Text fontSize="3xl" marginBottom="20px" width="100%">
-          SIGN UP
+          SIGN IN
         </Text>
         <Stack spacing={6}>
           <div>
@@ -61,20 +53,17 @@ const Signup = () => {
               variant="outline"
               placeholder="이메일"
               data-testid="email-input"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
+              onChange={EmailHanlder}
               value={email}
             />
-
-            {!checkEmail(email) && email.length > 0 ? (
+            {checkEmail(email) === 'fail' && (
               <Alert status="error" h="30px" marginTop="5px">
                 <AlertIcon w="15px" />
                 <AlertDescription fontSize="10px">
                   @를 포함해주세요.
                 </AlertDescription>
               </Alert>
-            ) : null}
+            )}
           </div>
 
           <div>
@@ -82,20 +71,18 @@ const Signup = () => {
               variant="outline"
               placeholder="비밀번호"
               data-testid="password-input"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
+              onChange={PasswordHandler}
               value={password}
               type="password"
             />
-            {!checkPassword(password) && password.length > 0 ? (
+            {checkPassword(password) === 'fail' && (
               <Alert status="error" h="30px" marginTop="5px">
                 <AlertIcon w="15px" />
                 <AlertDescription fontSize="10px">
                   8자 이상 입력해주세요.
                 </AlertDescription>
               </Alert>
-            ) : null}
+            )}
           </div>
         </Stack>
 
@@ -109,15 +96,18 @@ const Signup = () => {
           marginBottom="20px"
           data-testid="signup-button"
           isDisabled={
-            checkEmail(email) && checkPassword(password) ? false : true
+            checkEmail(email) === 'success' &&
+            checkPassword(password) === 'success'
+              ? false
+              : true
           }
-          onClick={postSignUp}
+          onClick={loginHandler}
         >
-          회원가입
+          로그인
         </Button>
       </Box>
     </Center>
   );
 };
 
-export default Signup;
+export default Signin;
