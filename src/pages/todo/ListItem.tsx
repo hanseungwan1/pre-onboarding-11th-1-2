@@ -1,15 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Flex, Button, Text, ListItem, Input } from '@chakra-ui/react';
 import { TodoItem } from './todo.hooks';
+import { updateHandler, deleteHandler } from './todo.hooks';
 
-type GreetingsProps = {
+type Props = {
   itemData: TodoItem;
+  todoList: TodoItem[];
+  setTodoList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
   // children: React.ReactNode;
 };
 
-const Item: React.FC<GreetingsProps> = ({ itemData }) => {
-  const [item, setItem] = useState<TodoItem>(itemData);
+const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
+  const [todoItem, setTodoItem] = useState<TodoItem>(itemData);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [todoText, setTodoText] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const changeText = isEditMode ? (
     <Input
@@ -19,13 +24,19 @@ const Item: React.FC<GreetingsProps> = ({ itemData }) => {
       bg="#D7E5F0"
       border="0"
       outline="0"
-      value={item.todo}
+      ref={inputRef}
+      onChange={e => setTodoText(e.target.value)}
+      value={todoItem.todo}
     ></Input>
   ) : (
     <Text flex="1" pl="2" fontSize="1rem">
-      {item.todo}
+      {todoItem.todo}
     </Text>
   );
+
+  useEffect(() => {
+    isEditMode && inputRef.current?.focus();
+  }, [isEditMode]);
 
   return (
     <ListItem flex="1">
@@ -40,7 +51,11 @@ const Item: React.FC<GreetingsProps> = ({ itemData }) => {
       >
         <Input
           type="checkbox"
-          checked={item.isCompleted}
+          onChange={e => {
+            const data = updateHandler(e, todoItem);
+            data && setTodoItem(data);
+          }}
+          checked={todoItem.isCompleted}
           w="20px"
           outline="0"
           display="flex"
@@ -50,7 +65,7 @@ const Item: React.FC<GreetingsProps> = ({ itemData }) => {
         ></Input>
         {changeText}
         <Button
-          data-testid="new-todo-add-button"
+          data-testid="modify-button"
           w="60px"
           bg="transparent"
           cursor="pointer"
@@ -60,14 +75,44 @@ const Item: React.FC<GreetingsProps> = ({ itemData }) => {
           수정
         </Button>
         <Button
-          data-testid="new-todo-add-button"
+          data-testid="delete-button"
           w="60px"
           bg="transparent"
           cursor="pointer"
           border="0"
           color="#DB261D"
+          onClick={() => {
+            const data = deleteHandler(todoItem.id, todoList);
+            data && setTodoList([...data]);
+          }}
         >
           삭제
+        </Button>
+        <Button
+          data-testid="submit-button"
+          w="60px"
+          bg="transparent"
+          cursor="pointer"
+          border="0"
+          onClick={e => {
+            const newTodoItem = { ...todoItem, todoText };
+            const data = updateHandler(e, newTodoItem);
+            data && setTodoItem(data);
+            setIsEditMode(false);
+          }}
+        >
+          제출
+        </Button>
+        <Button
+          data-testid="cancel-button"
+          w="60px"
+          bg="transparent"
+          cursor="pointer"
+          border="0"
+          color="#DB261D"
+          onClick={() => setIsEditMode(false)}
+        >
+          취소
         </Button>
       </Flex>
     </ListItem>
