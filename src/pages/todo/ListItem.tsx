@@ -13,7 +13,6 @@ type Props = {
 const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
   const [todoItem, setTodoItem] = useState<TodoItem>(itemData);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [todoText, setTodoText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const changeText = isEditMode ? (
@@ -25,7 +24,7 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
       border="0"
       outline="0"
       ref={inputRef}
-      onChange={e => setTodoText(e.target.value)}
+      onChange={e => setTodoItem({ ...todoItem, todo: e.target.value })}
       value={todoItem.todo}
     ></Input>
   ) : (
@@ -95,9 +94,12 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
           cursor="pointer"
           border="0"
           onClick={e => {
-            const newTodoItem = { ...todoItem, todoText };
-            const data = updateHandler(e, newTodoItem);
-            data && setTodoItem(data);
+            if (todoItem.todo.length < 1) {
+              setTodoItem({ ...todoItem, todo: itemData.todo });
+            } else {
+              const data = updateHandler(e, todoItem);
+              data && setTodoItem(data);
+            }
             setIsEditMode(false);
           }}
         >
@@ -110,7 +112,10 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
           cursor="pointer"
           border="0"
           color="#DB261D"
-          onClick={() => setIsEditMode(false)}
+          onClick={() => {
+            setTodoItem({ ...todoItem, todo: itemData.todo });
+            setIsEditMode(false);
+          }}
         >
           취소
         </Button>
