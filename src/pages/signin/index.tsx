@@ -1,4 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
+import useAuthRedirection from '../../hooks/useAuthRedirection';
+import Path from '../../utils/constants/path';
 import { checkSignin } from './signin.hook';
 import { checkEmail, checkPassword } from './signin.hook';
 // import { useNavigate } from 'react-router-dom';
@@ -14,12 +16,14 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-const SignIn = () => {
+const Signin = () => {
   // const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [disable, setDisable] = useState<boolean>(true);
-
+  const isAuth = useAuthRedirection({
+    to: Path.TODO,
+    isRedirectionIfAuth: true,
+  });
   const EmailHanlder = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -106,4 +110,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default Signin;
