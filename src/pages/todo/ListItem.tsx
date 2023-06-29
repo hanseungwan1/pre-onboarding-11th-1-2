@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Flex, Button, Text, ListItem, Input } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Text,
+  ListItem,
+  Input,
+  Checkbox,
+} from '@chakra-ui/react';
 import { TodoItem } from './todo.hooks';
 import { updateHandler, deleteHandler } from './todo.hooks';
 
@@ -15,9 +22,15 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    isEditMode && inputRef.current?.focus();
+  }, [isEditMode]);
+
   const changeText = isEditMode ? (
     <Input
       flex="1"
+      flexGrow="1"
+      flexBasis="70%"
       py="17.5"
       fontSize="1rem"
       bg="#D7E5F0"
@@ -28,28 +41,93 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
       value={todoItem.todo}
     ></Input>
   ) : (
-    <Text flex="1" pl="2" fontSize="1rem">
+    <Text
+      flex="1"
+      flexGrow="1"
+      flexBasis="70%"
+      display="flex"
+      alignItems="center"
+      pl="4"
+      fontSize="1rem"
+    >
       {todoItem.todo}
     </Text>
   );
 
-  useEffect(() => {
-    isEditMode && inputRef.current?.focus();
-  }, [isEditMode]);
+  const BUTTONS_NO_EDIT = [
+    {
+      text: '수정',
+      dataset: 'modify-button',
+      onClick: () => setIsEditMode(true),
+    },
+    {
+      text: '삭제',
+      dataset: 'delete-button',
+      onClick: () => {
+        const data = deleteHandler(todoItem.id, todoList);
+        data && setTodoList([...data]);
+      },
+    },
+  ];
+
+  const BUTTONS_EDIT = [
+    {
+      text: '제출',
+      dataset: 'submit-button',
+      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (todoItem.todo.length < 1) {
+          setTodoItem({ ...todoItem, todo: itemData.todo });
+        } else {
+          const data = updateHandler(e, todoItem);
+          data && setTodoItem(data);
+        }
+        setIsEditMode(false);
+      },
+    },
+    {
+      text: '취소',
+      dataset: 'cancel-button',
+      onClick: () => {
+        setTodoItem({ ...todoItem, todo: itemData.todo });
+        setIsEditMode(false);
+      },
+    },
+  ];
+
+  type ButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
+  interface ItemButton {
+    text: string;
+    dataset: string;
+    onClick: ButtonHandler;
+  }
+
+  const buttonItems = isEditMode ? BUTTONS_EDIT : BUTTONS_NO_EDIT;
+  const changeButtons = buttonItems.map((item: ItemButton, index) => (
+    <Button
+      key={index}
+      data-testid={item.dataset}
+      flex="1"
+      flexBasis="60px"
+      bg="transparent"
+      cursor="pointer"
+      border="0"
+      onClick={item.onClick}
+    >
+      {item.text}
+    </Button>
+  ));
 
   return (
-    <ListItem flex="1">
+    <ListItem flex="1" mx="4%">
       <Flex
-        minH="50"
-        px="20"
-        py="5"
-        columnGap="10"
+        px="10"
+        py="2"
+        columnGap="2"
         bg="rgba(255,255,255,0.8)"
         border="1px solid #D7E5F0"
         borderRadius="999"
       >
-        <Input
-          type="checkbox"
+        <Checkbox
           onChange={e => {
             const data = updateHandler(e, todoItem);
             data && setTodoItem(data);
@@ -57,68 +135,10 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
           checked={todoItem.isCompleted}
           w="20px"
           outline="0"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          style={{ accentColor: '#0082FC' }}
-        ></Input>
+          style={{ accentColor: '#319795' }}
+        ></Checkbox>
         {changeText}
-        <Button
-          data-testid="modify-button"
-          w="60px"
-          bg="transparent"
-          cursor="pointer"
-          border="0"
-          onClick={() => setIsEditMode(true)}
-        >
-          수정
-        </Button>
-        <Button
-          data-testid="delete-button"
-          w="60px"
-          bg="transparent"
-          cursor="pointer"
-          border="0"
-          color="#DB261D"
-          onClick={() => {
-            const data = deleteHandler(todoItem.id, todoList);
-            data && setTodoList([...data]);
-          }}
-        >
-          삭제
-        </Button>
-        <Button
-          data-testid="submit-button"
-          w="60px"
-          bg="transparent"
-          cursor="pointer"
-          border="0"
-          onClick={e => {
-            if (todoItem.todo.length < 1) {
-              setTodoItem({ ...todoItem, todo: itemData.todo });
-            } else {
-              const data = updateHandler(e, todoItem);
-              data && setTodoItem(data);
-            }
-            setIsEditMode(false);
-          }}
-        >
-          제출
-        </Button>
-        <Button
-          data-testid="cancel-button"
-          w="60px"
-          bg="transparent"
-          cursor="pointer"
-          border="0"
-          color="#DB261D"
-          onClick={() => {
-            setTodoItem({ ...todoItem, todo: itemData.todo });
-            setIsEditMode(false);
-          }}
-        >
-          취소
-        </Button>
+        {changeButtons as React.ReactNode}
       </Flex>
     </ListItem>
   );

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, List, Text } from '@chakra-ui/react';
-import { TodoItem, getHandler } from './todo.hooks';
+import { TodoItem } from './todo.hooks';
 import InsertForm from './InsertForm';
 import Item from './ListItem';
 
@@ -27,8 +27,8 @@ const Todo = () => {
   // }, []);
 
   return (
-    <Box w="80%" m="0 auto" h="100%" p="30">
-      <Box px="40" py="30" bg="#D7E5F0" borderRadius="10">
+    <Box m="0 auto" h="100%">
+      <Box mb="4vh" px="10%" py="5%" bg="#D7E5F0" borderRadius="10">
         <Text textAlign="center" fontSize="2.8rem" fontWeight="900">
           TO DO
         </Text>
@@ -37,7 +37,7 @@ const Todo = () => {
       <List
         display="flex"
         flexDirection="column"
-        rowGap="10"
+        rowGap="4"
         style={{ paddingInlineStart: 0 }}
       >
         {ListContainer}
