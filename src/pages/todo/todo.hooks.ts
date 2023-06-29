@@ -1,11 +1,13 @@
-/*
-import { KeyboardEvent, MouseEvent } from 'react';
+export {};
 
-export interface Todo {
+export interface TodoItem {
   id: number;
   todo: string;
   isCompleted: boolean;
 }
+
+/*
+import { KeyboardEvent, MouseEvent } from 'react';
 
 type SetState<T> = {
   (value: T): T;
