@@ -1,6 +1,6 @@
 import React from 'react';
 import useAuthRedirection from '../hooks/useAuthRedirection';
-import Path from '../utils/constants/path';
+import PATH from '../utils/constants/path';
 
 interface GeneralLayoutProps {
   children: React.ReactNode;
@@ -8,12 +8,12 @@ interface GeneralLayoutProps {
 
 const GeneralLayout: React.FC<GeneralLayoutProps> = ({ children }) => {
   const isAuth = useAuthRedirection({
-    to: Path.SIGNIN,
+    to: PATH.SIGNIN,
     isRedirectionIfAuth: false,
   });
 
   if (!isAuth) {
-    return null;
+    return <></>;
   }
   return <>{children}</>;
 };

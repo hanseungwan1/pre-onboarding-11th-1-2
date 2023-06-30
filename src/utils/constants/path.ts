@@ -1,8 +1,8 @@
-enum Path {
+enum PATH {
   HOME = '/',
   SIGNIN = '/signin',
   SIGNUP = '/signup',
   TODO = '/todo',
 }
 
-export default Path;
+export default PATH;

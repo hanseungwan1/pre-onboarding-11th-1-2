@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import useAuthRedirection from '../../hooks/useAuthRedirection';
-import Path from '../../utils/constants/path';
+import PATH from '../../utils/constants/path';
 import { checkSignin } from './signin.hook';
 import {
   Alert,
@@ -24,7 +24,7 @@ const Signin = () => {
   const { replaceTo } = useRouter();
 
   const isAuth = useAuthRedirection({
-    to: Path.TODO,
+    to: PATH.TODO,
     isRedirectionIfAuth: true,
   });
 
@@ -44,7 +44,7 @@ const Signin = () => {
     e.preventDefault();
 
     const response = await checkSignin(email, password);
-    if (response) replaceTo(Path.TODO);
+    if (response) replaceTo(PATH.TODO);
   };
 
   return (
