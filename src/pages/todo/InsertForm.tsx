@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Flex, Input, Button } from '@chakra-ui/react';
 import { TodoItem, createHandler } from './todo.hooks';
 
@@ -11,6 +11,8 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
   const [todoText, setTodoText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => setTodoText(''), [todoList]);
+
   return (
     <Flex columnGap="5" rowGap="5" my="30" flexWrap="wrap">
       <Input
@@ -18,8 +20,6 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
         px="2%"
         py="6"
         flexBasis="70%"
-        fontSize="1rem"
-        borderRadius="5"
         bg="white"
         border="0"
         outline="0"
@@ -31,7 +31,6 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
           const data = await createHandler(e, todoText);
           if (data) {
             setTodoList([data, ...todoList]);
-            setTodoText('');
           }
         }}
         onChange={e => setTodoText(e.target.value)}
@@ -41,11 +40,8 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
         minW="120px"
         flexGrow="1"
         py="6"
-        borderRadius="5"
-        border="0"
-        cursor="pointer"
-        fontSize="1rem"
         colorScheme="teal"
+        isDisabled={todoText.length < 1 && true}
         onClick={async e => {
           const data = await createHandler(e, todoText);
           data && setTodoList([data, ...todoList]);
@@ -57,4 +53,4 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
   );
 };
 
-export default InsertForm;
+export default React.memo(InsertForm);
