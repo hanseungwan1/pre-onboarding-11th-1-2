@@ -14,7 +14,6 @@ type Props = {
   itemData: TodoItem;
   todoList: TodoItem[];
   setTodoList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
-  // children: React.ReactNode;
 };
 
 const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
@@ -63,8 +62,8 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
     {
       text: '삭제',
       dataset: 'delete-button',
-      onClick: () => {
-        const data = deleteHandler(todoItem.id, todoList);
+      onClick: async () => {
+        const data = await deleteHandler(todoItem.id, todoList);
         data && setTodoList([...data]);
       },
     },
@@ -74,11 +73,11 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
     {
       text: '제출',
       dataset: 'submit-button',
-      onClick: (e: React.MouseEvent<HTMLButtonElement>) => {
+      onClick: async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (todoItem.todo.length < 1) {
           setTodoItem({ ...todoItem, todo: itemData.todo });
         } else {
-          const data = updateHandler(e, todoItem);
+          const data = await updateHandler(e, todoItem);
           data && setTodoItem(data);
         }
         setIsEditMode(false);
@@ -128,11 +127,11 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
         borderRadius="999"
       >
         <Checkbox
-          onChange={e => {
-            const data = updateHandler(e, todoItem);
+          onChange={async e => {
+            const data = await updateHandler(e, todoItem);
             data && setTodoItem(data);
           }}
-          checked={todoItem.isCompleted}
+          isChecked={todoItem.isCompleted}
           w="20px"
           outline="0"
           style={{ accentColor: '#319795' }}

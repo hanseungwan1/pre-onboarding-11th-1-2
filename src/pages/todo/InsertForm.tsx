@@ -5,7 +5,6 @@ import { TodoItem, createHandler } from './todo.hooks';
 type Props = {
   todoList: TodoItem[];
   setTodoList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
-  // children: React.ReactNode;
 };
 
 const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
@@ -27,9 +26,13 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
         data-testid="new-todo-input"
         placeholder="할 일을 입력하세요..."
         ref={inputRef}
-        onKeyDown={e => {
-          const data = createHandler(e, todoText);
-          data && setTodoList([data, ...todoList]);
+        value={todoText}
+        onKeyDown={async e => {
+          const data = await createHandler(e, todoText);
+          if (data) {
+            setTodoList([data, ...todoList]);
+            setTodoText('');
+          }
         }}
         onChange={e => setTodoText(e.target.value)}
       />
@@ -43,8 +46,8 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
         cursor="pointer"
         fontSize="1rem"
         colorScheme="teal"
-        onClick={e => {
-          const data = createHandler(e, todoText);
+        onClick={async e => {
+          const data = await createHandler(e, todoText);
           data && setTodoList([data, ...todoList]);
         }}
       >
