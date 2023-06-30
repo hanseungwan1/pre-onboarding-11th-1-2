@@ -1,18 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, List, Text } from '@chakra-ui/react';
-import { TodoItem } from './todo.hooks';
+import { TodoItem, getHandler } from './todo.hooks';
 import InsertForm from './InsertForm';
 import Item from './ListItem';
 
 const Todo = () => {
   const [todoList, setTodoList] = useState<TodoItem[]>([]);
-  const testData: TodoItem[] = [
-    { id: 1, todo: 'Todo1', isCompleted: false },
-    { id: 2, todo: 'Todo2', isCompleted: false },
-    { id: 3, todo: 'Todo3', isCompleted: true },
-  ];
 
-  const ListContainer = testData.map((item: TodoItem) => (
+  const ListContainer = todoList.map((item: TodoItem) => (
     <Item
       key={item.id}
       itemData={item}
@@ -21,10 +16,14 @@ const Todo = () => {
     />
   ));
 
-  // useEffect(() => {
-  //   const data = getHandler();
-  //   data && setTodoList(data);
-  // }, []);
+  const initList = async () => {
+    const data = await getHandler();
+    data && setTodoList(data);
+  };
+
+  useEffect(() => {
+    initList();
+  }, []);
 
   return (
     <Box m="0 auto" h="100%">
