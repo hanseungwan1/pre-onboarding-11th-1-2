@@ -16,18 +16,23 @@ const Todo = () => {
     />
   ));
 
-  const initList = async () => {
-    const data = await getHandler();
-    data && setTodoList(data);
-  };
-
   useEffect(() => {
-    initList();
+    (async () => {
+      const data = await getHandler();
+      data && setTodoList(data);
+    })();
   }, []);
 
   return (
     <Box m="0 auto" h="100%">
-      <Box mb="4vh" px="10%" py="5%" bg="#D7E5F0" borderRadius="10">
+      <Box
+        mb="4vh"
+        px="10%"
+        py="5%"
+        bg="#D7E5F0"
+        borderBottomLeftRadius="10"
+        borderBottomRightRadius="10"
+      >
         <Text textAlign="center" fontSize="2.8rem" fontWeight="900">
           TO DO
         </Text>

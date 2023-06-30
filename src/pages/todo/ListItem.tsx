@@ -27,11 +27,11 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
 
   const changeText = isEditMode ? (
     <Input
+      data-testid="modify-input"
       flex="1"
       flexGrow="1"
       flexBasis="70%"
       py="17.5"
-      fontSize="1rem"
       bg="#D7E5F0"
       border="0"
       outline="0"
@@ -47,7 +47,6 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
       display="flex"
       alignItems="center"
       pl="4"
-      fontSize="1rem"
     >
       {todoItem.todo}
     </Text>
@@ -108,8 +107,6 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
       flex="1"
       flexBasis="60px"
       bg="transparent"
-      cursor="pointer"
-      border="0"
       onClick={item.onClick}
     >
       {item.text}
@@ -122,7 +119,6 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
         px="10"
         py="2"
         columnGap="2"
-        bg="rgba(255,255,255,0.8)"
         border="1px solid #D7E5F0"
         borderRadius="999"
       >
@@ -143,4 +139,4 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
   );
 };
 
-export default Item;
+export default React.memo(Item);
