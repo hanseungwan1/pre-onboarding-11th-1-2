@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Flex, Input, Button } from '@chakra-ui/react';
-import { TodoItem, createHandler } from './todo.hooks';
+import { CreateEvent, TodoItem, createHandler } from './todo.hooks';
 
 type Props = {
   todoList: TodoItem[];
@@ -11,7 +11,13 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
   const [todoText, setTodoText] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => setTodoText(''), [todoList]);
+  const addTodoHandler = async (e: CreateEvent) => {
+    const data = await createHandler(e, todoText);
+    if (data) {
+      setTodoText('');
+      setTodoList([data, ...todoList]);
+    }
+  };
 
   return (
     <Flex columnGap="5" rowGap="5" my="30" flexWrap="wrap">
@@ -27,13 +33,8 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
         placeholder="할 일을 입력하세요..."
         ref={inputRef}
         value={todoText}
-        onKeyDown={async e => {
-          const data = await createHandler(e, todoText);
-          if (data) {
-            setTodoList([data, ...todoList]);
-          }
-        }}
-        onChange={e => setTodoText(e.target.value)}
+        onKeyDown={addTodoHandler}
+        onChange={({ target }) => setTodoText(target.value)}
       />
       <Button
         data-testid="new-todo-add-button"
@@ -42,10 +43,7 @@ const InsertForm: React.FC<Props> = ({ todoList, setTodoList }) => {
         py="6"
         colorScheme="teal"
         isDisabled={todoText.length < 1 && true}
-        onClick={async e => {
-          const data = await createHandler(e, todoText);
-          data && setTodoList([data, ...todoList]);
-        }}
+        onClick={addTodoHandler}
       >
         추가
       </Button>
