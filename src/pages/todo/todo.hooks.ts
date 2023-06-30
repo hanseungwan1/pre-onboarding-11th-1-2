@@ -7,11 +7,11 @@ export interface TodoItem {
   isCompleted: boolean;
 }
 
-type CreateEvent =
+export type CreateEvent =
   | React.KeyboardEvent<HTMLInputElement>
   | React.MouseEvent<HTMLButtonElement>;
 
-type UpdateEvent =
+export type UpdateEvent =
   | React.MouseEvent<HTMLButtonElement>
   | React.ChangeEvent<HTMLInputElement>;
 

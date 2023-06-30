@@ -16,6 +16,13 @@ type Props = {
   setTodoList: React.Dispatch<React.SetStateAction<TodoItem[]>>;
 };
 
+type ButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
+interface ItemButton {
+  text: string;
+  dataset: string;
+  onClick: ButtonHandler;
+}
+
 const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
   const [todoItem, setTodoItem] = useState<TodoItem>(itemData);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -91,13 +98,6 @@ const Item: React.FC<Props> = ({ itemData, todoList, setTodoList }) => {
       },
     },
   ];
-
-  type ButtonHandler = (e: React.MouseEvent<HTMLButtonElement>) => void;
-  interface ItemButton {
-    text: string;
-    dataset: string;
-    onClick: ButtonHandler;
-  }
 
   const buttonItems = isEditMode ? BUTTONS_EDIT : BUTTONS_NO_EDIT;
   const changeButtons = buttonItems.map((item: ItemButton, index) => (
