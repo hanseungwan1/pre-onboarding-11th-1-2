@@ -1,15 +1,21 @@
 # 팀원
 [김호정](https://github.com/HJKim423)
+
 [권성민](https://github.com/kwonja)
+
 [전유영](https://github.com/PollyGotACracker)
+
 [한승완](https://github.com/hanseungwan1)
+
 [신동재](https://github.com/lIIIlIIIlIIIl)
+
 [조해창](https://github.com/Funbucket)
 
 
 # 배포링크
 
 # 프로젝트 구조
+```bash
 📦 src
 ├── 📂 apis
 │   ├── 📂 auth
@@ -43,6 +49,8 @@
     │   │── 📄 path.ts
     └── 📂 helper
          └── 📄 validationCheck.ts
+```
+
 # Best Practice
 ## 프로젝트 환경
 ### Eslint/ Prettier 설정
