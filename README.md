@@ -15,6 +15,11 @@
 # 배포링크
 [바로가기](https://pre-onboarding-11th-1-2.vercel.app/)
 
+# 라우터
+/siginin
+/siginup
+/todo
+
 # 프로젝트 구조
 ```bash
 📦 src
