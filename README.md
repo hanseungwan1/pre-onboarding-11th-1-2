@@ -15,10 +15,8 @@
 # 배포링크
 [바로가기](https://pre-onboarding-11th-1-2.vercel.app/)
 
-# 라우터
-`/siginin`
-`/siginup`
-`/todo`
+# 요구사항
+https://github.com/hanseungwan1/selection-task
 
 # 프로젝트 구조
 ```bash
